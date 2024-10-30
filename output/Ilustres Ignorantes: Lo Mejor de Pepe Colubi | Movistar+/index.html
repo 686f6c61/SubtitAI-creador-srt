@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilustres Ignorantes: Lo Mejor de Pepe Colubi | Movistar+</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mui/material@5.0.0/dist/mui.min.css" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .video-container { 
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .downloads {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .downloads h2 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .downloads a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            background: #1976d2;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .downloads a:hover {
+            background: #1565c0;
+        }
+        .transcription {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        .transcription-column {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .transcription-column h2 {
+            font-family: 'Roboto', sans-serif;
+            color: #1976d2;
+            font-size: 1.4em;
+            font-weight: 500;
+            margin: 0 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e3f2fd;
+        }
+        .transcription-text {
+            font-family: 'Merriweather', serif;
+            font-size: 1em;
+            line-height: 1.7;
+            color: #2c3e50;
+        }
+        .transcription-text p {
+            margin: 0 0 0.8em 0;
+            text-align: left;
+            font-weight: 300;
+            letter-spacing: 0.01em;
+        }
+        .transcription-text p:last-child {
+            margin-bottom: 0;
+        }
+        @media (max-width: 768px) {
+            .transcription {
+                grid-template-columns: 1fr;
+            }
+            .transcription-text {
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+        }
+        .timestamp {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 20px;
+            text-align: right;
+        }
+        .video-source {
+            text-align: center;
+            margin: 15px 0 25px 0;
+        }
+        
+        .video-source a {
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 0.95em;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .video-source a:hover {
+            text-decoration: underline;
+            color: #1565c0;
+        }
+        
+        .video-source a::before {
+            content: '▶';
+            color: #ff0000;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ilustres Ignorantes: Lo Mejor de Pepe Colubi | Movistar+</h1>
+        
+        <div class="video-container">
+            <video width="100%" height="auto" controls>
+                <source src="./video.mp4" type="video/mp4">
+                Tu navegador no soporta el elemento video.
+                <track kind="subtitles" src="./subtitles_es.srt" srclang="es" label="Español">
+                <track kind="subtitles" src="./subtitles_en.srt" srclang="en" label="English">
+            </video>
+        </div>
+
+        <div class="video-source">
+            <a href="https://www.youtube.com/watch?v=VYfGCMojSDk" target="_blank" rel="noopener noreferrer">
+                Ver video original en YouTube
+            </a>
+        </div>
+
+        <div class="downloads">
+            <h2>Descargar Recursos</h2>
+            <a href="./video.mp4" download>Video MP4</a>
+            <a href="./audio.mp3" download>Audio MP3</a>
+            <a href="./subtitles_es.srt" download>Subtítulos ES</a>
+            <a href="./subtitles_en.srt" download>Subtítulos EN</a>
+            <a href="./report.txt" download>Reporte</a>
+        </div>
+
+        <div class="transcription">
+            <div class="transcription-column">
+                <h2>Texto en Español</h2>
+                <div class="transcription-text">
+                    
+                        <p>Mi relación con el deporte es de absoluto desprecio.</p>
+                    
+                        <p>El deporte me parece una mierda.</p>
+                    
+                        <p>Un día, por lo que fuera, yo era una persona creativa,</p>
+                    
+                        <p>yo era...</p>
+                    
+                        <p>jacarandoso.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Y entonces, un profesor nos hizo un examen</p>
+                    
+                        <p>y pidió que dejáramos el examen cuando acabó el tiempo</p>
+                    
+                        <p>y que lo iba recogiendo.</p>
+                    
+                        <p>Entonces yo, con los brazos cruzados,</p>
+                    
+                        <p>me puse el examen en la cabeza.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Le facilité la tarea, desde mi punto de vista.</p>
+                    
+                        <p>Él venía por detrás,</p>
+                    
+                        <p>y yo, pues, con los brazos cruzados,</p>
+                    
+                        <p>le facilité la tarea, desde mi punto de vista.</p>
+                    
+                        <p>Él venía por detrás.</p>
+                    
+                        <p>Bueno, pues, ¿qué hizo este tío, que espero que me esté viendo?</p>
+                    
+                        <p>Dejó los exámenes</p>
+                    
+                        <p>y me calzó una hostia desde atrás.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Pero una hostia que, como los dibujos animados,</p>
+                    
+                        <p>quedó el examen en el aire y yo en el suelo.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Pepe, ¿cuándo descubriste por primera vez</p>
+                    
+                        <p>que tu familia no era rica?</p>
+                    
+                        <p>Justo después de matarlos.</p>
+                    
+                        <p>¿Quién pensó que era tan urgente llevar un cortaduñas encima</p>
+                    
+                        <p>para añadirle la función llavero?</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Yo a esa persona le propondría como presidente del gobierno.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Porque estamos viendo que vale cualquiera.</p>
+                    
+                        <p>¡Jajajajajaja!</p>
+                    
+                        <p>Yo siempre soy el que inicia la conga en las bodas.</p>
+                    
+                        <p>Siempre me gusta, cojo, ¿sabes?</p>
+                    
+                        <p>La típica tía, abuela, soltera, mayor,</p>
+                    
+                        <p>que es un saco de huesos.</p>
+                    
+                        <p>Siempre la agarro a ella y la levanto un poco.</p>
+                    
+                        <p>Entonces, todo el mundo cree...</p>
+                    
+                        <p>Todo el mundo cree que nos lleva a ella,</p>
+                    
+                        <p>pero, además, como son...</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Como son fibrosas, yo la muevo así y ella mueve los brazos.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>O sea, me vengo tan arriba que una vez lo hice, fíjate,</p>
+                    
+                        <p>en un funeral.</p>
+                    
+                        <p>Yo no tengo miedo porque soy...</p>
+                    
+                        <p>bíbaracho y aventurero,</p>
+                    
+                        <p>pero cuando me duermo no tengo control sobre las pesadillas.</p>
+                    
+                        <p>Yo tengo pánico a dormirme</p>
+                    
+                        <p>y que por la noche se meta en mi cama Bill Cosby.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Yo creo que el baile lo inventó Stephen Hawking.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>No, no.</p>
+                    
+                        <p>Eh...</p>
+                    
+                        <p>Joder, no os reáis que...</p>
+                    
+                        <p>casi le cuesta la vida, mirad cómo quedó.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>¿Qué te gustaría descubrir a ti, Pepe?</p>
+                    
+                        <p>Pues, hombre, lo obvio sería decir una vacuna contra el cáncer, ¿no?</p>
+                    
+                        <p>Pero es que...</p>
+                    
+                        <p>el cáncer se llevó a mi suegra, yo estoy muy agradecido al cáncer.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Yo fui una vez al hipódromo de la zarzuela</p>
+                    
+                        <p>a conocer cómo era eso de las carreras de caballos.</p>
+                    
+                        <p>En la primera carrera había un caballo que se llamaba Newman.</p>
+                    
+                        <p>Y yo me acordé del cartero de Seinfeld.</p>
+                    
+                        <p>Y aposté a Newman. Y ganó la carrera.</p>
+                    
+                        <p>Gané 5 euros con 40 céntimos porque mi apuesta había sido miserable.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Entonces fui a la siguiente carrera y corría un caballo llamado Joy Division.</p>
+                    
+                        <p>Y aposté todo lo que tenía y llegó el último.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>¿Qué he aprendido? ¡Nada!</p>
+                    
+                        <p>¡Jajajajajaja!</p>
+                    
+                        <p>Sé que mucha gente que oiga esto pensará que soy un desalmado,</p>
+                    
+                        <p>pero yo me he masturbado a espaldas de mi novia.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>No quiero decir sobre su culo cuando dormía, que también.</p>
+                    
+                        <p>¡Jajajajajaja!</p>
+                    
+                        <p>O sea, estando ella a lo mejor en la habitación de al lado,</p>
+                    
+                        <p>me he masturbado pensando en otras mujeres.</p>
+                    
+                        <p>¡Jajajajajaja!</p>
+                    
+                        <p>¡Jajajajajajaja!</p>
+                    
+                        <p>Yo quiero llegar a salir aquí con una sonda y en pañales.</p>
+                    
+                        <p>¡Jajajajajaja!</p>
+                    
+                        <p>Y sin afeitar.</p>
+                    
+                        <p>Pero no porque sea muy mayor, sino la semana que viene, si puede ser.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>¿Con el camisón detrás? Abierto por detrás.</p>
+                    
+                        <p>¿Tienes una cita? Un camisón de lunares.</p>
+                    
+                        <p>¿Tienes una cita? Un tacto rectal.</p>
+                    
+                        <p>¡Ah, ves! ¡Claro! ¡Jajajajajaja!</p>
+                    
+                        <p>Solo hace falta masturbarte compulsivamente por si,</p>
+                    
+                        <p>de casualidad, tu eyaculación coincide,</p>
+                    
+                        <p>esté donde esté, con un orgasmo de Mónica Bellucci.</p>
+                    
+                        <p>Una vez me dijo mi novia, hoy sexo anal.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Dije yo, venga, vale, estoy preparado.</p>
+                    
+                        <p>Y cogió y apareció con un dildo de cinturón puesto ella.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Estrapón, se llama, ¿verdad? Estrapón.</p>
+                    
+                        <p>Estrapón.</p>
+                    
+                        <p>Luego me dijo que era un hieno sentada,</p>
+                    
+                        <p>pero me había visto tan entusiasmado que me la metió doblada.</p>
+                    
+                        <p>Yo he llegado a masturbarme pensando en mí.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Pero, ojo, con avaricia, pensando en un trío con dos yoes.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Ah, sí.</p>
+                    
+                        <p>O sea, que estar mirándolo y de pronto darme cuenta</p>
+                    
+                        <p>y que, de manera subjetiva, mis tres yoes me miran a mí.</p>
+                    
+                        <p>Con lo cual me di cuenta que somos cuatro.</p>
+                    
+                        <p>Yo estoy flipando con vuestra visión idílica del colegio.</p>
+                    
+                        <p>Un sitio donde hay que puto madrugar todos los días.</p>
+                    
+                        <p>Eso, eso.</p>
+                    
+                        <p>¿Me estás diciendo que tú, en cuanto niño,</p>
+                    
+                        <p>con tus 12 años, con tus pelos o los huevos ya,</p>
+                    
+                        <p>ir a las nueve a clase era madrugar?</p>
+                    
+                        <p>Perdón, Isabel.</p>
+                    
+                        <p>¿Madrugabais? ¿Ir a las nueve a clase era madrugar?</p>
+                    
+                        <p>Ya que nombras pelos y huevos,</p>
+                    
+                        <p>yo he tenido mucho que hacer por la noche, ¿vale?</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Yo propongo una asignatura, además. Ciencias marrones.</p>
+                    
+                        <p>Están las naturales, que está muy bien, están las sociales,</p>
+                    
+                        <p>pero ciencias marrones que te enseñan a desenvolverte</p>
+                    
+                        <p>en situaciones difíciles de la vida, ¿no?</p>
+                    
+                        <p>Por ejemplo, una noche que ligas y cuando en casa, en la intimidad,</p>
+                    
+                        <p>le quitas la ropa interior a la persona con la que has ligado,</p>
+                    
+                        <p>ves rastros de papel higiénico en su genitalia.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>¿Cómo manejas eso? ¿Qué cara pones?</p>
+                    
+                        <p>La, la, la, la, la, la, la, la, la, la.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Y va bien, es un poco Indio de España.</p>
+                    
+                        <p>La, la, la, la, la.</p>
+                    
+                        <p>Avanzamos de una manera radical hacia la autoaniquilación.</p>
+                    
+                        <p>Es decir, los mamuts, los tomates, las abejas, el PESOE,</p>
+                    
+                        <p>todo se va desvaneciendo, o sea, todo está desapareciendo de una manera...</p>
+                    
+                        <p>Pepe, ¿tenías moto en el colegio?</p>
+                    
+                        <p>Sí.</p>
+                    
+                        <p>¡Jajajajaja!</p>
+                    
+                        <p>Subtítulos por la comunidad de Amara.org</p>
+                    
+                </div>
+            </div>
+            <div class="transcription-column">
+                <h2>Texto en Inglés</h2>
+                <div class="transcription-text">
+                    
+                        <p>Translate these subtitles to English:</p>
+                    
+                        <p>My relationship with sport is one of absolute contempt.</p>
+                    
+                        <p>I think sport is crap.</p>
+                    
+                        <p>One day, for whatever reason, I was a creative person,</p>
+                    
+                        <p>I was...</p>
+                    
+                        <p>lively.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>And then, a teacher gave us a test</p>
+                    
+                        <p>and asked us to leave the test when time was up</p>
+                    
+                        <p>and he was going to collect it.</p>
+                    
+                        <p>So I, with my arms crossed,</p>
+                    
+                        <p>put the exam on my head.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I made his job easier, from my point of view.</p>
+                    
+                        <p>He was coming from behind,</p>
+                    
+                        <p>and I, well, with my arms crossed,</p>
+                    
+                        <p>I made it easier for him, from my point of view.</p>
+                    
+                        <p>He was coming from behind.</p>
+                    
+                        <p>Well, so, what did this guy do, who I hope is watching me?</p>
+                    
+                        <p>He left the exams</p>
+                    
+                        <p>and slapped me from behind.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>But a slap that, like cartoons,</p>
+                    
+                        <p>left the exam in the air and me on the ground.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>Pepe, when did you first discover</p>
+                    
+                        <p>that your family wasn't rich?</p>
+                    
+                        <p>Right after killing them.</p>
+                    
+                        <p>Who thought it was so urgent to carry a nail clipper around</p>
+                    
+                        <p>to add a keychain function to it?</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I would propose that person as president of the government.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>Because we are seeing that anyone is suitable.</p>
+                    
+                        <p>Hahahahahaha!</p>
+                    
+                        <p>I am always the one who starts the conga line at weddings.</p>
+                    
+                        <p>I always like it, I grab, you know?</p>
+                    
+                        <p>The typical aunt, grandmother, single, older,</p>
+                    
+                        <p>who is a bag of bones.</p>
+                    
+                        <p>I always grab her and lift her a little.</p>
+                    
+                        <p>Then, everyone believes...</p>
+                    
+                        <p>Everyone believes that she leads us,</p>
+                    
+                        <p>but, in addition, as they are...</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>As they are fibrous, I move her like this and she moves her arms.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>So, I got so carried away that once I did it, look,</p>
+                    
+                        <p>at a funeral.</p>
+                    
+                        <p>I'm not afraid because I'm...</p>
+                    
+                        <p>drunken and adventurous,</p>
+                    
+                        <p>but when I sleep I have no control over nightmares.</p>
+                    
+                        <p>I'm terrified of falling asleep</p>
+                    
+                        <p>and Bill Cosby sneaking into my bed at night.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I believe dancing was invented by Stephen Hawking.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>No, no.</p>
+                    
+                        <p>Uh...</p>
+                    
+                        <p>Damn, don't laugh that...</p>
+                    
+                        <p>it almost cost him his life, look at how he ended up.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>What would you like to discover, Pepe?</p>
+                    
+                        <p>Well, the obvious thing would be to say a vaccine against cancer, right?</p>
+                    
+                        <p>But it's that...</p>
+                    
+                        <p>cancer took my mother-in-law, I am very grateful to cancer.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I once went to the zarzuela racetrack</p>
+                    
+                        <p>to see what horse racing was like.</p>
+                    
+                        <p>In the first race there was a horse named Newman.</p>
+                    
+                        <p>And I remembered the postman from Seinfeld.</p>
+                    
+                        <p>And I bet on Newman. And he won the race.</p>
+                    
+                        <p>I won 5 euros with 40 cents because my bet had been miserable.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>Then I went to the next race and a horse named Joy Division ran.</p>
+                    
+                        <p>And I bet everything I had and he came last.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>What have I learned? Nothing!</p>
+                    
+                        <p>Hahahahahaha!</p>
+                    
+                        <p>I know that many people who hear this will think that I am heartless,</p>
+                    
+                        <p>but I have masturbated behind my girlfriend's back.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I don’t mean on her behind while she was sleeping, although also.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I mean, if she's in the room next door,</p>
+                    
+                        <p>I've masturbated thinking about other women.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I want to come out here with a catheter and in diapers.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>And unshaven.</p>
+                    
+                        <p>But not because I'm very old, next week if possible.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>With the nightgown behind? Open from the back.</p>
+                    
+                        <p>Do you have a date? A polka dot nightgown.</p>
+                    
+                        <p>Do you have a date? A rectal examination.</p>
+                    
+                        <p>Ah, you see! Of course! Hahahaha!</p>
+                    
+                        <p>You only need to masturbate compulsively in case,</p>
+                    
+                        <p>by chance, your ejaculation coincides,</p>
+                    
+                        <p>wherever she is, with an orgasm from Monica Bellucci.</p>
+                    
+                        <p>Once my girlfriend said, anal sex today.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I said, come on, okay, I'm prepared.</p>
+                    
+                        <p>And she took out a belt dildo worn by her.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>Strapon, it's called, right? Strapon.</p>
+                    
+                        <p>Strapon.</p>
+                    
+                        <p>Then she told me it was a seated prank,</p>
+                    
+                        <p>but she saw me so enthusiastic that she put it in me bent.</p>
+                    
+                        <p>I've masturbated thinking about me.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>But, beware, with greed, thinking about a threesome with two me's.</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>Ah, yes.</p>
+                    
+                        <p>So, looking at it and suddenly realizing</p>
+                    
+                        <p>and that, from a subjective point of view, my three selves are looking at me.</p>
+                    
+                        <p>So I realized that there are four of us.</p>
+                    
+                        <p>I'm tripping over your idyllic vision of school.</p>
+                    
+                        <p>A place where you have to fucking get up early every day.</p>
+                    
+                        <p>That, that.</p>
+                    
+                        <p>Are you telling me that you, as a child,</p>
+                    
+                        <p>with your 12 years, with your hairs or the eggs already,</p>
+                    
+                        <p>going to class at nine was getting up early?</p>
+                    
+                        <p>Sorry, Isabel.</p>
+                    
+                        <p>Did you get up? Was going to class at nine getting up early?</p>
+                    
+                        <p>Since you mention hairs and eggs,</p>
+                    
+                        <p>I had a lot to do at night, okay?</p>
+                    
+                        <p>Hahahahaha!</p>
+                    
+                        <p>I propose a subject, also. Brown sciences.</p>
+                    
+                        <p>There are the natural ones, which is very good, there are the social ones,</p>
+                    
+                        <p>but brown sciences that teach you to get by</p>
+                    
+                        <p>in difficult situations in life, right?</p>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="timestamp">
+            Procesado el: 2024-10-30 19:08:06
+        </div>
+    </div>
+</body>
+</html>

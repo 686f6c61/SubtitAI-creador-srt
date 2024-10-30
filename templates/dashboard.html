@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Processor Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <i class="fab fa-youtube fa-2x"></i>
+            <h1 class="header-title">SRT YouTube Generator</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>📥 Procesar Nuevo Video</h2>
+            <div id="urlForm">
+                <div class="input-group">
+                    <input type="text" id="urlInput" class="input-field" 
+                           placeholder="Pega aquí la URL de YouTube">
+                    <button id="processBtn" class="btn btn-primary" onclick="processVideo()">
+                        <i class="fas fa-play"></i>
+                        Procesar Video
+                    </button>
+                </div>
+                
+                <div class="upload-section">
+                    <h3>📤 Subir Archivo de URLs</h3>
+                    <div class="upload-container" id="dropZone">
+                        <input type="file" id="fileInput" accept=".txt" class="file-input">
+                        <div class="upload-content">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Arrastra y suelta un archivo .txt o</p>
+                            <button class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                                Seleccionar Archivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="playlist-section">
+                <h3>📑 Procesar Lista de YouTube</h3>
+                <div class="playlist-container">
+                    <div class="input-group">
+                        <input type="text" id="playlistUrl" class="input-field" 
+                               placeholder="URL de lista de reproducción de YouTube">
+                        <button class="btn btn-primary" onclick="processPlaylist()">
+                            <i class="fas fa-list"></i>
+                            Obtener Videos
+                        </button>
+                    </div>
+                    <div id="playlistVideos" class="playlist-videos hidden">
+                        <div class="playlist-header">
+                            <span>Videos encontrados: <span id="videoCount">0</span></span>
+                            <div class="playlist-actions">
+                                <button class="btn btn-secondary" onclick="selectAllVideos()">
+                                    <i class="fas fa-check-square"></i> Seleccionar Todos
+                                </button>
+                                <button class="btn btn-primary" onclick="processSelectedPlaylistVideos()">
+                                    <i class="fas fa-play-circle"></i> Procesar Seleccionados
+                                </button>
+                            </div>
+                        </div>
+                        <div id="videosList" class="videos-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-files-section">
+                <h3>📁 URLs Disponibles</h3>
+                <div class="input-files-container">
+                    <div class="file-selector">
+                        <select id="fileSelector" class="input-field">
+                            <option value="">Seleccionar archivo de URLs...</option>
+                        </select>
+                        <button id="deleteFileBtn" class="btn btn-danger btn-small" style="display: none;">
+                            <i class="fas fa-trash"></i>
+                            Borrar Archivo
+                        </button>
+                    </div>
+                    <div class="file-actions" style="display: none;" id="fileActions">
+                        <button class="btn btn-secondary" onclick="toggleAllVideos()">
+                            <i class="fas fa-check-square"></i> Seleccionar Todos
+                        </button>
+                        <button class="btn btn-primary" onclick="processSelectedVideos()">
+                            <i class="fas fa-play-circle"></i>
+                            Procesar Seleccionados
+                        </button>
+                    </div>
+                    <div id="urlsList" class="urls-list">
+                        <div class="no-urls">No hay URLs disponibles</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="status" class="status">
+                <div id="currentStep"></div>
+                <ul class="loading-steps" id="loadingSteps">
+                    <li class="loading-step" data-step="download">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                        Descargando video...
+                    </li>
+                    <li class="loading-step" data-step="audio">
+                        <i class="fas fa-music"></i>
+                        Extrayendo audio...
+                    </li>
+                    <li class="loading-step" data-step="transcribe">
+                        <i class="fas fa-language"></i>
+                        Transcribiendo...
+                    </li>
+                    <li class="loading-step" data-step="translate">
+                        <i class="fas fa-globe"></i>
+                        Traduciendo...
+                    </li>
+                    <li class="loading-step" data-step="generate">
+                        <i class="fas fa-file-code"></i>
+                        Generando recursos...
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📚 Videos Procesados</h2>
+            <div id="videoGrid" class="video-grid"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>SRT YouTube Generator - Desarrollado con ❤️ por <a href="https://github.com/686f6c61" target="_blank">@686f6c61</a></p>
+        </div>
+    </footer>
+
+    <script>
+        let isProcessing = false;
+        let playlistVideos = [];
+        let currentFile = '';
+        let currentUrls = [];
+
+        function updateLoadingStep(step) {
+            const steps = document.querySelectorAll('.loading-step');
+            let found = false;
+            
+            steps.forEach(stepEl => {
+                if (stepEl.dataset.step === step) {
+                    stepEl.classList.add('active');
+                    found = true;
+                } else if (!found) {
+                    stepEl.classList.add('completed');
+                    stepEl.classList.remove('active');
+                } else {
+                    stepEl.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        async function processVideo() {
+            if (isProcessing) return;
+
+            const urlInput = document.getElementById('urlInput');
+            const statusDiv = document.getElementById('status');
+            const processBtn = document.getElementById('processBtn');
+            
+            if (!urlInput.value) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Por favor, introduce una URL válida';
+                return;
+            }
+
+            try {
+                isProcessing = true;
+                processBtn.disabled = true;
+                statusDiv.className = 'status processing';
+                
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: urlInput.value })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Video procesado correctamente';
+                    loadVideos();
+                    urlInput.value = '';
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = `❌ Error: ${data.error}`;
+                }
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = `❌ Error: ${error.message}`;
+            } finally {
+                isProcessing = false;
+                processBtn.disabled = false;
+            }
+        }
+
+        async function loadVideos() {
+            try {
+                const response = await fetch('/videos');
+                const videos = await response.json();
+                const videoGrid = document.getElementById('videoGrid');
+
+                if (videos.length === 0) {
+                    videoGrid.innerHTML = '<p class="no-videos">No hay videos procesados</p>';
+                    return;
+                }
+
+                videoGrid.innerHTML = videos.map(video => `
+                    <div class="video-card">
+                        <div class="video-thumbnail">
+                            <video width="100%" height="100%" preload="metadata" poster>
+                                <source src="${video.path.replace('index.html', 'video.mp4')}#t=0.5" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title}</h3>
+                            <div class="video-metadata">
+                                Procesado: ${video.timestamp}
+                            </div>
+                            <div class="video-actions">
+                                <a href="${video.path}" class="btn-action btn-primary" target="_blank">
+                                    <i class="fas fa-play-circle"></i>
+                                    Ver Video
+                                </a>
+                                <a href="${video.youtubeUrl}" class="btn-action btn-secondary" target="_blank">
+                                    <i class="fab fa-youtube"></i>
+                                    Original
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Inicializar los thumbnails de video
+                const thumbnails = document.querySelectorAll('.video-thumbnail video');
+                thumbnails.forEach(video => {
+                    // Cargar solo el primer frame del video
+                    video.addEventListener('loadedmetadata', function() {
+                        this.currentTime = 0.1;
+                    });
+                    
+                    // Pausar el video después de cargar el frame
+                    video.addEventListener('seeked', function() {
+                        this.pause();
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error cargando videos:', error);
+                document.getElementById('videoGrid').innerHTML = 
+                    '<p class="error">Error cargando los videos</p>';
+            }
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const urls = e.target.result.split('\n').filter(url => url.trim());
+                // Aquí procesaríamos las URLs
+                console.log('URLs a procesar:', urls);
+            };
+            reader.readAsText(file);
+        }
+
+        async function loadInputFiles() {
+            const fileSelector = document.getElementById('fileSelector');
+            
+            try {
+                const response = await fetch('/input-files');
+                const files = await response.json();
+                
+                const options = files.map(file => 
+                    `<option value="${file}">${file}</option>`
+                ).join('');
+                
+                fileSelector.innerHTML = `
+                    <option value="">Seleccionar archivo de URLs...</option>
+                    ${options}
+                `;
+            } catch (error) {
+                console.error('Error cargando archivos:', error);
+            }
+        }
+
+        async function loadFileUrls() {
+            const fileSelector = document.getElementById('fileSelector');
+            const urlsList = document.getElementById('urlsList');
+            const deleteFileBtn = document.getElementById('deleteFileBtn');
+            const fileActions = document.getElementById('fileActions');
+            
+            currentFile = fileSelector.value;
+
+            if (!currentFile) {
+                urlsList.innerHTML = '<div class="no-urls">No hay URLs disponibles</div>';
+                deleteFileBtn.style.display = 'none';
+                fileActions.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/file-urls/${currentFile}`);
+                const urls = await response.json();
+                currentUrls = urls;
+
+                if (urls.length === 0) {
+                    urlsList.innerHTML = '<div class="no-urls">No hay URLs en este archivo</div>';
+                    fileActions.style.display = 'none';
+                } else {
+                    urlsList.innerHTML = urls.map((urlData, index) => `
+                        <div class="url-item" id="url-${index}">
+                            <input type="checkbox" class="url-checkbox" 
+                                   data-url="${urlData.url}"
+                                   data-index="${index}"
+                                   checked>
+                            <div class="url-content">
+                                <div class="url-text" title="${urlData.url}">
+                                    ${urlData.url}
+                                </div>
+                                ${urlData.title ? `
+                                    <div class="url-title">
+                                        <i class="fas fa-info-circle"></i> ${urlData.title}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Mostrar contador de videos
+                    const videoCount = urls.length;
+                    const countDisplay = document.createElement('div');
+                    countDisplay.className = 'video-count';
+                    countDisplay.innerHTML = `<i class="fas fa-video"></i> ${videoCount} video${videoCount !== 1 ? 's' : ''} encontrado${videoCount !== 1 ? 's' : ''}`;
+                    urlsList.insertAdjacentElement('beforebegin', countDisplay);
+                    
+                    fileActions.style.display = 'flex';
+                }
+
+                deleteFileBtn.style.display = 'inline-flex';
+            } catch (error) {
+                console.error('Error cargando URLs:', error);
+                urlsList.innerHTML = '<div class="no-urls">Error cargando URLs</div>';
+                fileActions.style.display = 'none';
+            }
+        }
+
+        async function processPlaylist() {
+            const playlistUrl = document.getElementById('playlistUrl').value.trim();
+            const playlistVideos = document.getElementById('playlistVideos');
+            const videosList = document.getElementById('videosList');
+            const videoCount = document.getElementById('videoCount');
+
+            if (!playlistUrl) {
+                showAlert('Introduce una URL de playlist válida');
+                return;
+            }
+
+            try {
+                videosList.innerHTML = '<div class="loading">Cargando videos...</div>';
+                playlistVideos.classList.remove('hidden');
+
+                const response = await fetch('/process-playlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: playlistUrl })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Error procesando playlist');
+                }
+
+                const videos = data.videos;
+                videoCount.textContent = videos.length;
+
+                // Actualizar la estructura del HTML para cada video
+                videosList.innerHTML = videos.map((video, index) => `
+                    <div class="video-item" id="playlist-video-${index}">
+                        <div class="video-content">
+                            <div class="video-checkbox-wrapper">
+                                <input type="checkbox" 
+                                       class="video-checkbox" 
+                                       data-url="${video.url}"
+                                       data-title="${video.title}"
+                                       checked>
+                                <div class="video-details">
+                                    <div class="video-title">${video.title}</div>
+                                    <div class="video-meta">
+                                        <span class="video-duration">
+                                            ${formatDuration(video.duration)}
+                                        </span>
+                                        <span class="video-id">ID: ${video.id}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-status-wrapper">
+                                <div class="status-message">Pendiente</div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                videosList.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds) return 'Duración desconocida';
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function selectAllVideos() {
+            const checkboxes = document.querySelectorAll('.video-checkbox');
+            const isAnyUnchecked = Array.from(checkboxes).some(cb => !cb.checked);
+            checkboxes.forEach(cb => cb.checked = isAnyUnchecked);
+        }
+
+        async function savePlaylist() {
+            const selectedVideos = Array.from(document.querySelectorAll('.video-checkbox:checked'))
+                .map(cb => ({
+                    url: cb.dataset.url,
+                    title: cb.parentElement.querySelector('.video-details div').textContent
+                }));
+
+            if (selectedVideos.length === 0) {
+                showAlert('Selecciona al menos un video');
+                return;
+            }
+
+            try {
+                const response = await fetch('/save-playlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ videos: selectedVideos })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showAlert('Lista guardada correctamente', 'success');
+                    loadInputFiles();
+                } else {
+                    showAlert(data.error);
+                }
+            } catch (error) {
+                showAlert('Error guardando la lista');
+            }
+        }
+
+        async function deleteInputFile(filename) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este archivo?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/delete-file/${filename}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showAlert('Archivo eliminado correctamente', 'success');
+                    loadInputFiles();
+                } else {
+                    showAlert('Error eliminando el archivo');
+                }
+            } catch (error) {
+                showAlert('Error eliminando el archivo');
+            }
+        }
+
+        function showAlert(message, type = 'error') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                              type === 'warning' ? 'fa-exclamation-triangle' : 
+                              'fa-exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            // Añadir al DOM
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            // Remover después de 5 segundos
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        async function deleteCurrentFile() {
+            if (!currentFile) return;
+            
+            if (confirm(`¿Estás seguro de que quieres eliminar el archivo ${currentFile}?`)) {
+                try {
+                    const response = await fetch(`/delete-file/${currentFile}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        showAlert('Archivo eliminado correctamente', 'success');
+                        await loadInputFiles();
+                        currentFile = null;
+                        document.getElementById('urlsList').innerHTML = '<div class="no-urls">No hay URLs disponibles</div>';
+                        document.getElementById('deleteFileBtn').style.display = 'none';
+                    } else {
+                        showAlert('Error eliminando el archivo');
+                    }
+                } catch (error) {
+                    showAlert('Error eliminando el archivo');
+                }
+            }
+        }
+
+        async function processAllUrls() {
+            if (!currentUrls.length) return;
+
+            const processButton = document.querySelector('.file-actions .btn-primary');
+            processButton.disabled = true;
+            processButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
+            for (let i = 0; i < currentUrls.length; i++) {
+                const urlItem = document.getElementById(`url-${i}`);
+                const urlText = currentUrls[i].split('#')[0].trim();
+                
+                try {
+                    urlItem.classList.add('processing');
+                    const response = await fetch('/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ url: urlText })
+                    });
+
+                    if (response.ok) {
+                        urlItem.classList.remove('processing');
+                        urlItem.classList.add('completed');
+                    } else {
+                        throw new Error('Error en el procesamiento');
+                    }
+                } catch (error) {
+                    urlItem.classList.remove('processing');
+                    urlItem.classList.add('error');
+                    console.error(`Error procesando URL ${i + 1}:`, error);
+                }
+            }
+
+            processButton.disabled = false;
+            processButton.innerHTML = '<i class="fas fa-play-circle"></i> Procesar Todos los Videos';
+            
+            // Recargar la lista de videos procesados
+            await loadVideos();
+        }
+
+        function toggleAllVideos() {
+            const checkboxes = document.querySelectorAll('.url-checkbox');
+            const isAnyUnchecked = Array.from(checkboxes).some(cb => !cb.checked);
+            checkboxes.forEach(cb => cb.checked = isAnyUnchecked);
+        }
+
+        async function processSelectedVideos() {
+            const checkboxes = document.querySelectorAll('.url-checkbox:checked');
+            if (checkboxes.length === 0) {
+                showAlert('Selecciona al menos un video para procesar');
+                return;
+            }
+
+            const processButton = document.querySelector('.file-actions .btn-primary');
+            processButton.disabled = true;
+            processButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
+            for (const checkbox of checkboxes) {
+                const url = checkbox.dataset.url;
+                const index = checkbox.dataset.index;
+                const urlItem = document.getElementById(`url-${index}`);
+
+                try {
+                    urlItem.classList.add('processing');
+                    const response = await fetch('/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ url })
+                    });
+
+                    if (response.ok) {
+                        urlItem.classList.remove('processing');
+                        urlItem.classList.add('completed');
+                    } else {
+                        throw new Error('Error en el procesamiento');
+                    }
+                } catch (error) {
+                    urlItem.classList.remove('processing');
+                    urlItem.classList.add('error');
+                    console.error(`Error procesando URL:`, error);
+                }
+            }
+
+            processButton.disabled = false;
+            processButton.innerHTML = '<i class="fas fa-play-circle"></i> Procesar Seleccionados';
+            
+            await loadVideos(); // Actualizar la lista de videos procesados
+        }
+
+        async function processSelectedPlaylistVideos() {
+            const checkboxes = document.querySelectorAll('.video-checkbox:checked');
+            if (checkboxes.length === 0) {
+                showAlert('Selecciona al menos un video para procesar');
+                return;
+            }
+
+            const processButton = document.querySelector('.playlist-actions .btn-primary');
+            processButton.disabled = true;
+            processButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (const checkbox of checkboxes) {
+                const videoItem = checkbox.closest('.video-item');
+                const statusMessage = videoItem.querySelector('.status-message');
+                const url = checkbox.dataset.url;
+                const title = checkbox.dataset.title;
+
+                if (!statusMessage) {
+                    console.error('No se encontró el elemento de estado para:', title);
+                    continue;
+                }
+
+                try {
+                    videoItem.classList.add('processing');
+                    statusMessage.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+
+                    const response = await fetch('/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ url })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Error en el procesamiento');
+                    }
+
+                    videoItem.classList.remove('processing');
+                    videoItem.classList.add('completed');
+                    statusMessage.innerHTML = '<i class="fas fa-check"></i> Completado';
+                    successCount++;
+
+                } catch (error) {
+                    console.error(`Error procesando video ${title}:`, error);
+                    videoItem.classList.remove('processing');
+                    videoItem.classList.add('error');
+                    statusMessage.innerHTML = 
+                        `<i class="fas fa-exclamation-triangle"></i> Error: ${error.message}`;
+                    errorCount++;
+                }
+            }
+
+            processButton.disabled = false;
+            processButton.innerHTML = '<i class="fas fa-play-circle"></i> Procesar Seleccionados';
+            
+            showAlert(
+                `Procesamiento completado:\n${successCount} videos exitosos\n${errorCount} videos con error`,
+                errorCount === 0 ? 'success' : 'warning'
+            );
+
+            await loadVideos();
+        }
+
+        // Actualizar la generación de elementos de la playlist
+        function renderPlaylistVideo(video, index) {
+            return `
+                <div class="video-item" id="playlist-video-${index}">
+                    <div class="video-content">
+                        <div class="video-checkbox-wrapper">
+                            <input type="checkbox" 
+                                   class="video-checkbox" 
+                                   data-url="${video.url}"
+                                   data-title="${video.title}"
+                                   checked>
+                            <div class="video-details">
+                                <div class="video-title">${video.title}</div>
+                                <div class="video-meta">
+                                    <span class="video-duration">
+                                        ${formatDuration(video.duration)}
+                                    </span>
+                                    <span class="video-id">ID: ${video.id}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video-status-wrapper">
+                            <div class="status-message">Pendiente</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Cargar videos al iniciar
+        loadVideos();
+
+        // Cargar archivos al iniciar
+        loadInputFiles();
+
+        // Funcionalidad de arrastrar y soltar
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        // Prevenir comportamiento por defecto
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        // Resaltar drop zone cuando se arrastra un archivo
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        // Manejar archivo soltado
+        dropZone.addEventListener('drop', handleDrop, false);
+        fileInput.addEventListener('change', handleFileSelect, false);
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = e.target.files;
+            handleFiles(files);
+        }
+
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+            
+            const file = files[0];
+            if (file.type !== 'text/plain' && !file.name.endsWith('.txt')) {
+                showAlert('Por favor, sube solo archivos .txt');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/upload-file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('Archivo subido correctamente', 'success');
+                    await loadInputFiles(); // Recargar lista de archivos
+                    fileInput.value = ''; // Limpiar input
+                } else {
+                    throw new Error(data.error || 'Error subiendo archivo');
+                }
+            } catch (error) {
+                showAlert(error.message);
+                console.error('Error:', error);
+            }
+        }
+
+        function showAlert(message, type = 'error') {
+            // Implementa tu sistema de alertas aquí
+            alert(message);
+        }
+
+        // Asegurarse de que se ejecuta cuando se carga un archivo
+        async function handleFiles(files) {
+            if (!files.length) return;
+            
+            const file = files[0];
+            if (!file.name.endsWith('.txt')) {
+                showAlert('Solo se permiten archivos .txt');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/upload-file', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al subir el archivo');
+                }
+
+                showAlert('Archivo subido correctamente', 'success');
+                
+                // Actualizar selector de archivos y cargar URLs automáticamente
+                await loadInputFiles();
+                
+                // Seleccionar automáticamente el archivo recién subido
+                const fileSelector = document.getElementById('fileSelector');
+                fileSelector.value = file.name;
+                
+                // Cargar las URLs del archivo
+                await loadFileUrls();
+            } catch (error) {
+                showAlert(error.message);
+            }
+        }
+
+        // Asegurarse de que el selector de archivos funcione
+        async function loadInputFiles() {
+            const fileSelector = document.getElementById('fileSelector');
+            
+            try {
+                const response = await fetch('/input-files');
+                const files = await response.json();
+                
+                const options = files.map(file => 
+                    `<option value="${file}">${file}</option>`
+                ).join('');
+                
+                fileSelector.innerHTML = `
+                    <option value="">Seleccionar archivo de URLs...</option>
+                    ${options}
+                `;
+            } catch (error) {
+                console.error('Error cargando archivos:', error);
+            }
+        }
+
+        // Asegurarse de que las URLs se carguen correctamente
+        async function loadFileUrls() {
+            const fileSelector = document.getElementById('fileSelector');
+            const urlsList = document.getElementById('urlsList');
+            const deleteFileBtn = document.getElementById('deleteFileBtn');
+            const fileActions = document.getElementById('fileActions');
+            
+            currentFile = fileSelector.value;
+
+            if (!currentFile) {
+                urlsList.innerHTML = '<div class="no-urls">No hay URLs disponibles</div>';
+                deleteFileBtn.style.display = 'none';
+                fileActions.style.display = 'none';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/file-urls/${currentFile}`);
+                const urls = await response.json();
+                currentUrls = urls;
+
+                if (urls.length === 0) {
+                    urlsList.innerHTML = '<div class="no-urls">No hay URLs en este archivo</div>';
+                    fileActions.style.display = 'none';
+                } else {
+                    // Limpiar el contador anterior si existe
+                    const existingCount = document.querySelector('.video-count');
+                    if (existingCount) {
+                        existingCount.remove();
+                    }
+
+                    urlsList.innerHTML = urls.map((urlData, index) => `
+                        <div class="url-item" id="url-${index}">
+                            <input type="checkbox" class="url-checkbox" 
+                                   data-url="${urlData.url}"
+                                   data-index="${index}"
+                                   checked>
+                            <div class="url-content">
+                                <div class="url-text" title="${urlData.url}">
+                                    ${urlData.url}
+                                </div>
+                                ${urlData.title ? `
+                                    <div class="url-title">
+                                        <i class="fas fa-info-circle"></i> ${urlData.title}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Mostrar contador de videos
+                    const videoCount = urls.length;
+                    const countDisplay = document.createElement('div');
+                    countDisplay.className = 'video-count';
+                    countDisplay.innerHTML = `<i class="fas fa-video"></i> ${videoCount} video${videoCount !== 1 ? 's' : ''} encontrado${videoCount !== 1 ? 's' : ''}`;
+                    urlsList.insertAdjacentElement('beforebegin', countDisplay);
+                    
+                    fileActions.style.display = 'flex';
+                }
+
+                deleteFileBtn.style.display = 'inline-flex';
+            } catch (error) {
+                console.error('Error cargando URLs:', error);
+                urlsList.innerHTML = '<div class="no-urls">Error cargando URLs</div>';
+                fileActions.style.display = 'none';
+            }
+        }
+
+        // Añadir event listeners cuando se carga la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileSelector = document.getElementById('fileSelector');
+            fileSelector.addEventListener('change', loadFileUrls);
+            
+            // Cargar archivos inicialmente
+            loadInputFiles();
+        });
+    </script>
+</body>
+</html>
